@@ -1,0 +1,211 @@
+@import 'mapbox-gl/dist/mapbox-gl.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 215 25% 27%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 27%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 27%;
+
+    --primary: 213 94% 47%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 95%;
+    --secondary-foreground: 215 25% 27%;
+
+    --muted: 213 20% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 213 30% 92%;
+    --accent-foreground: 215 25% 27%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 213 27% 84%;
+    --input: 213 27% 84%;
+    --ring: 213 94% 47%;
+
+    /* Custom Best Hair Docs colors */
+    --medical-blue: 213 94% 47%;
+    --medical-blue-light: 213 86% 95%;
+    --medical-blue-dark: 213 94% 37%;
+    --trust-blue: 213 80% 54%;
+    --professional-gray: 215 16% 47%;
+    --success-green: 142 76% 36%;
+    --warning-amber: 43 96% 56%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom Mapbox Popup Styles */
+.clinic-popup-container {
+  font-family: inherit;
+}
+
+.clinic-popup-container .mapboxgl-popup-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: none;
+  padding: 0;
+  min-width: 280px;
+}
+
+.clinic-popup-container .mapboxgl-popup-tip {
+  border-top-color: white;
+  border-bottom-color: white;
+}
+
+.clinic-popup h3 {
+  color: #1f2937;
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.clinic-popup p {
+  color: #374151;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.clinic-popup p:last-child {
+  margin-bottom: 0;
+}
+
+.clinic-popup .open-maps-btn {
+  background-color: #2563eb;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+}
+
+.clinic-popup .open-maps-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* Simple Pin Styles */
+.simple-pin {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.simple-pin:hover {
+  transform: scale(1.1);
+}
+
+/* Clinic Card Styles */
+.clinic-card {
+  transition: all 0.3s ease;
+}
+
+.clinic-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.clinic-card .card-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.clinic-card .card-image img {
+  transition: transform 0.3s ease;
+}
+
+.clinic-card:hover .card-image img {
+  transform: scale(1.05);
+}
+
+.clinic-card .card-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+}
