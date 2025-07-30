@@ -13,6 +13,52 @@ import {
 } from '@/utils/mapUtils';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
+// Add custom CSS for popups
+const popupStyles = `
+  .mapboxgl-popup {
+    z-index: 1000;
+  }
+  .mapboxgl-popup-content {
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: none;
+    padding: 0;
+  }
+  .mapboxgl-popup-tip {
+    border-top-color: white;
+  }
+  .clinic-popup-content {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .mapboxgl-popup-close-button {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    color: #6b7280 !important;
+    background: white !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 30px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  }
+  .mapboxgl-popup-close-button:hover {
+    background: #f3f4f6 !important;
+    color: #374151 !important;
+    transform: scale(1.1) !important;
+  }
+`;
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = popupStyles;
+  document.head.appendChild(styleSheet);
+}
+
 interface ClinicMapProps {
   locations: ClinicLocation[];
   clinicName: string;
@@ -30,17 +76,26 @@ export const ClinicMap = ({ locations, clinicName, className = '' }: ClinicMapPr
   const [mapError, setMapError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('ClinicMap: Initializing map...');
+    console.log('ClinicMap: Mapbox token:', mapboxgl.accessToken ? 'Present' : 'Missing');
+    
     // Check if Mapbox token is available
     if (!mapboxgl.accessToken || mapboxgl.accessToken.includes('example')) {
-      setMapError('Mapbox access token not configured. Please add VITE_MAPBOX_ACCESS_TOKEN to your .env file.');
+      const errorMsg = 'Mapbox access token not configured. Please add VITE_MAPBOX_ACCESS_TOKEN to your .env file.';
+      console.error('ClinicMap:', errorMsg);
+      setMapError(errorMsg);
       setIsLoading(false);
       return;
     }
 
     // Initialize map
-    if (!mapContainer.current) return;
+    if (!mapContainer.current) {
+      console.error('ClinicMap: Map container not found');
+      return;
+    }
 
     try {
+      console.log('ClinicMap: Creating map instance...');
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: defaultMapConfig.style,
@@ -57,18 +112,21 @@ export const ClinicMap = ({ locations, clinicName, className = '' }: ClinicMapPr
 
       // Handle map errors
       map.current.on('error', (e) => {
-        console.error('Mapbox error:', e);
+        console.error('ClinicMap: Mapbox error:', e);
         setMapError('Failed to load map. Please check your internet connection.');
       });
 
       // Close popups when clicking elsewhere on the map
       map.current.on('click', () => {
+        console.log('ClinicMap: Map clicked, closing popups');
         popups.current.forEach(popup => popup.remove());
         setSelectedLocation(null);
       });
 
+      console.log('ClinicMap: Map initialized successfully');
+
     } catch (error) {
-      console.error('Failed to initialize map:', error);
+      console.error('ClinicMap: Failed to initialize map:', error);
       setMapError('Failed to initialize map. Please check your Mapbox configuration.');
     }
 
@@ -85,12 +143,14 @@ export const ClinicMap = ({ locations, clinicName, className = '' }: ClinicMapPr
     const geocodeLocations = async () => {
       if (mapError) return;
       
+      console.log('ClinicMap: Geocoding locations...', locations);
       setIsLoading(true);
       try {
         const geocoded = await geocodeClinicLocations(locations);
+        console.log('ClinicMap: Geocoded locations:', geocoded);
         setGeocodedLocations(geocoded);
       } catch (error) {
-        console.error('Failed to geocode locations:', error);
+        console.error('ClinicMap: Failed to geocode locations:', error);
         setGeocodedLocations(locations);
       } finally {
         setIsLoading(false);
@@ -104,7 +164,12 @@ export const ClinicMap = ({ locations, clinicName, className = '' }: ClinicMapPr
 
   useEffect(() => {
     // Add markers when geocoded locations are available
-    if (!map.current || geocodedLocations.length === 0 || mapError) return;
+    if (!map.current || geocodedLocations.length === 0 || mapError) {
+      console.log('ClinicMap: Skipping marker creation - map:', !!map.current, 'locations:', geocodedLocations.length, 'error:', !!mapError);
+      return;
+    }
+
+    console.log('ClinicMap: Adding markers...', geocodedLocations);
 
     // Clear existing markers and popups
     markers.current.forEach(marker => marker.remove());
@@ -114,34 +179,75 @@ export const ClinicMap = ({ locations, clinicName, className = '' }: ClinicMapPr
     // Add new markers with popups
     geocodedLocations.forEach((location, index) => {
       if (location.coordinates) {
+        console.log('ClinicMap: Creating marker for location:', location.name, 'at coordinates:', location.coordinates);
+        
+        // Create popup content
+        const popupContent = `
+          <div style="padding: 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 300px;">
+            <h3 style="font-weight: 700; font-size: 18px; margin-bottom: 12px; color: #111827;">${location.name}</h3>
+            <div style="margin-bottom: 16px;">
+              <p style="font-size: 14px; color: #374151; margin-bottom: 4px;">${location.address}</p>
+              <p style="font-size: 14px; color: #374151; margin-bottom: 8px;">${location.cityZip}</p>
+              ${location.phone ? `
+                
+                <a 
+                  href="tel:${location.phone.replace(/\s+/g, '')}"
+                  style="width: 100%; background-color: #2563eb; color: white; font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background-color 0.2s; text-decoration: none;"
+                  onmouseover="this.style.backgroundColor='#1d4ed8'"
+                  onmouseout="this.style.backgroundColor='#2563eb'"
+                >
+                  <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                  </svg>
+                  <span>Call ${location.phone}</span>
+                </a>
+              ` : ''}
+            </div>
+          </div>
+        `;
+
+        // Create popup
+        const popup = new mapboxgl.Popup({
+          closeButton: true,
+          closeOnClick: false,
+          maxWidth: '320px',
+          offset: 10
+        }).setHTML(popupContent);
+
         const markerEl = createSimplePin();
-        const popup = createClinicPopup(location);
         
         const marker = new mapboxgl.Marker({
           element: markerEl,
-          anchor: 'center' // Back to center with proper wrapper
+          anchor: 'center'
         })
           .setLngLat(location.coordinates)
+          .setPopup(popup)
           .addTo(map.current!);
 
         // Add click event to marker element
         markerEl.addEventListener('click', (e) => {
+          console.log('ClinicMap: Marker clicked:', location.name);
           e.stopPropagation();
           setSelectedLocation(location);
           
-          // Remove all other popups first
+          // Close all other popups first
           popups.current.forEach(p => p.remove());
           
           // Show this popup
           popup.addTo(map.current!);
+          
+          // Debug: Log popup state
+          console.log('ClinicMap: Popup added to map for:', location.name);
+          console.log('ClinicMap: Popup element:', popup.getElement());
         });
 
         // Also add click event to the marker itself as backup
         marker.getElement().addEventListener('click', (e) => {
+          console.log('ClinicMap: Marker backup click:', location.name);
           e.stopPropagation();
           setSelectedLocation(location);
           
-          // Remove all other popups first
+          // Close all other popups first
           popups.current.forEach(p => p.remove());
           
           // Show this popup
@@ -150,6 +256,10 @@ export const ClinicMap = ({ locations, clinicName, className = '' }: ClinicMapPr
 
         markers.current.push(marker);
         popups.current.push(popup);
+        
+        console.log('ClinicMap: Marker added successfully for:', location.name);
+      } else {
+        console.warn('ClinicMap: No coordinates for location:', location.name);
       }
     });
 
@@ -164,6 +274,8 @@ export const ClinicMap = ({ locations, clinicName, className = '' }: ClinicMapPr
       map.current.setCenter(geocodedLocations[0].coordinates);
       map.current.setZoom(12);
     }
+
+    console.log('ClinicMap: All markers added successfully');
 
   }, [geocodedLocations, mapError]);
 

@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -7,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { Star, MapPin, Phone, Mail, Calendar, Award, Users, DollarSign, Clock, Shield, Globe, TrendingUp, Heart } from "lucide-react";
 import { useFertilityClinicBySlug, useFertilityData } from "@/hooks/useFertilityDataFromSupabase";
 import BookConsultationModal from "@/components/BookConsultationModal";
-import { useState } from "react";
 import { FAQSection } from "@/components/FAQSection";
 import { Helmet } from "react-helmet-async";
 import { SuccessRateChart } from "@/components/SuccessRateChart";
@@ -242,6 +242,10 @@ export default function FertilityClinicDetail() {
                     <Mail className="w-4 h-4 text-muted-foreground" />
                     <span>{clinic.contact_email || 'info@fertilityclinic.com'}</span>
                   </div>
+                  <Button onClick={() => setModalOpen(true)} className="w-full">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Book Consultation
+                  </Button>
                 </CardContent>
               </Card>
 
@@ -254,7 +258,20 @@ export default function FertilityClinicDetail() {
                   <CardContent>
                     {clinic.doctors.map((doctor, idx) => (
                       <div key={idx} className="flex items-center space-x-3 mb-4">
-                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-background font-bold">
+                        {doctor.photo ? (
+                          <img 
+                            src={doctor.photo} 
+                            alt={`Dr. ${doctor.name}`}
+                            className="w-12 h-12 rounded-full object-cover border-2 border-primary/20"
+                            onError={(e) => {
+                              // Fallback to initials if image fails to load
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              target.nextElementSibling?.classList.remove('hidden');
+                            }}
+                          />
+                        ) : null}
+                        <div className={`w-12 h-12 bg-primary rounded-full flex items-center justify-center text-background font-bold ${doctor.photo ? 'hidden' : ''}`}>
                           {doctor.name ? doctor.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2) : 'Dr'}
                         </div>
                         <div>
@@ -338,8 +355,9 @@ export default function FertilityClinicDetail() {
       <Footer />
       
       <BookConsultationModal 
-        isOpen={modalOpen} 
-        onClose={() => setModalOpen(false)} 
+        open={modalOpen} 
+        onOpenChange={setModalOpen} 
+        clinicSlug={clinic.slug}
         clinicName={clinic.name}
       />
     </div>

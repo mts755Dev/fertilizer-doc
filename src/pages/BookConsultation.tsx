@@ -32,40 +32,59 @@ const BookConsultation = () => {
     setIsSubmitting(true);
     
     try {
-      // Prepare form data for Web3Forms
-      const formData = new FormData();
-      formData.append('access_key', import.meta.env.VITE_WEB3FORMS_ACCESS_KEY);
-      formData.append('name', data.name);
-      formData.append('email', data.email);
-      formData.append('phone', data.phone);
-      formData.append('message', data.message || 'No message provided');
-      formData.append('subject', `New Consultation Request - ${clinic_slug || 'General'}`);
-      formData.append('clinic_slug', clinic_slug || 'general');
+      // Save to Supabase consultation_submissions table (primary)
+      const { error: supabaseError } = await supabase
+        .from("consultation_submissions")
+        .insert([
+          {
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            message: data.message || 'No message provided',
+            clinic_slug: clinic_slug || 'general',
+            clinic_name: clinic_slug || 'General Inquiry'
+          }
+        ]);
 
-      // Submit to Web3Forms
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: formData
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        // TODO: Add leads table to Supabase schema if needed
-        // Also save to Supabase for backup
-        // const { error: supabaseError } = await supabase.from("leads").insert([
-        //   { ...data, clinic_slug }
-        // ]);
-        
-        // if (supabaseError) {
-        //   console.warn('Supabase backup failed:', supabaseError);
-        // }
-        
-        setSubmitted(true);
-        toast({ title: "Consultation Booked", description: "Your request has been submitted." });
-      } else {
-        toast({ title: "Submission Failed", description: "Failed to submit form. Please try again.", variant: "destructive" });
+      if (supabaseError) {
+        console.error('Database error:', supabaseError);
+        toast({ title: "Database Error", description: "Failed to save your consultation request. Please try again.", variant: "destructive" });
+        return;
       }
+
+      // Success - data saved to database
+      setSubmitted(true);
+      toast({ title: "Consultation Booked", description: "Your request has been submitted successfully." });
+
+      // Optional: Also submit to Web3Forms for email notification (if configured)
+      const web3formsKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+      if (web3formsKey) {
+        try {
+          const formData = new FormData();
+          formData.append('access_key', web3formsKey);
+          formData.append('name', data.name);
+          formData.append('email', data.email);
+          formData.append('phone', data.phone);
+          formData.append('message', data.message || 'No message provided');
+          formData.append('subject', `New Consultation Request - ${clinic_slug || 'General'}`);
+          formData.append('clinic_slug', clinic_slug || 'general');
+
+          const response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: formData
+          });
+
+          const result = await response.json();
+          if (!result.success) {
+            console.warn('Web3Forms submission failed, but data was saved to database');
+          }
+        } catch (web3formsError) {
+          console.warn('Web3Forms submission failed, but data was saved to database:', web3formsError);
+        }
+      } else {
+        console.log('Web3Forms not configured - data saved to database only');
+      }
+      
     } catch (err) {
       console.error('Form submission error:', err);
       toast({ title: "Submission Failed", description: "An error occurred. Please try again.", variant: "destructive" });

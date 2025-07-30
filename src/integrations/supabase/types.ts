@@ -12,24 +12,74 @@ export interface Database {
       contact_submissions: {
         Row: {
           id: number
+          first_name: string
+          last_name: string
+          email: string
+          phone: string
+          subject: string
+          message: string
+          form_type: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          first_name: string
+          last_name: string
+          email: string
+          phone: string
+          subject: string
+          message: string
+          form_type?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          first_name?: string
+          last_name?: string
+          email?: string
+          phone?: string
+          subject?: string
+          message?: string
+          form_type?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      consultation_submissions: {
+        Row: {
+          id: number
           name: string
           email: string
-          message: string
+          phone: string
+          message: string | null
+          clinic_slug: string
+          clinic_name: string | null
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: number
           name: string
           email: string
-          message: string
+          phone: string
+          message?: string | null
+          clinic_slug: string
+          clinic_name?: string | null
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: number
           name?: string
           email?: string
-          message?: string
+          phone?: string
+          message?: string | null
+          clinic_slug?: string
+          clinic_name?: string | null
           created_at?: string
+          updated_at?: string
         }
       }
       fertility_clinics: {

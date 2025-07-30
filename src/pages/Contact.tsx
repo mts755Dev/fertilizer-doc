@@ -14,7 +14,6 @@ import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [submitted, setSubmitted] = React.useState(false);
   const { toast } = useToast();
   
   const form = useForm({
@@ -54,32 +53,41 @@ const Contact = () => {
         return;
       }
 
-      // Prepare form data for Web3Forms (for email notification)
-      const formData = new FormData();
-      formData.append('access_key', import.meta.env.VITE_WEB3FORMS_ACCESS_KEY);
-      formData.append('name', `${data.firstName} ${data.lastName}`);
-      formData.append('email', data.email);
-      formData.append('phone', data.phone);
-      formData.append('subject', data.subject);
-      formData.append('message', data.message);
-      formData.append('form_type', 'contact');
+      // Success - data saved to database
+      toast({ title: "Message Sent", description: "Thank you for contacting us. We'll get back to you soon!" });
+      
+      // Reset form
+      form.reset();
 
-      // Submit to Web3Forms for email notification
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: formData
-      });
+      // Optional: Also submit to Web3Forms for email notification (if configured)
+      const web3formsKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+      if (web3formsKey) {
+        try {
+          const formData = new FormData();
+          formData.append('access_key', web3formsKey);
+          formData.append('name', `${data.firstName} ${data.lastName}`);
+          formData.append('email', data.email);
+          formData.append('phone', data.phone);
+          formData.append('subject', data.subject);
+          formData.append('message', data.message);
+          formData.append('form_type', 'contact');
 
-      const result = await response.json();
+          const response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: formData
+          });
 
-      if (result.success) {
-        setSubmitted(true);
-        toast({ title: "Message Sent", description: "Thank you for contacting us. We'll get back to you soon!" });
+          const result = await response.json();
+          if (!result.success) {
+            console.warn('Web3Forms submission failed, but data was saved to database');
+          }
+        } catch (web3formsError) {
+          console.warn('Web3Forms submission failed, but data was saved to database:', web3formsError);
+        }
       } else {
-        // Even if email fails, the data is saved in database
-        setSubmitted(true);
-        toast({ title: "Message Saved", description: "Your message has been saved. We'll get back to you soon!" });
+        console.log('Web3Forms not configured - data saved to database only');
       }
+      
     } catch (err) {
       console.error('Form submission error:', err);
       toast({ title: "Submission Failed", description: "An error occurred. Please try again.", variant: "destructive" });
@@ -87,30 +95,6 @@ const Contact = () => {
       setIsSubmitting(false);
     }
   };
-
-  if (submitted) {
-    return (
-      <div className="min-h-screen">
-        <Helmet>
-          <title>Contact FertilityIQ - Get in Touch</title>
-          <meta name="description" content="Contact FertilityIQ for questions, support, or partnership inquiries. We're here to help you on your fertility treatment journey." />
-        </Helmet>
-        <Navbar />
-        
-        <main className="pt-16">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold text-foreground mb-4">Thank You!</h1>
-              <p className="text-xl text-muted-foreground">
-                Your message has been sent successfully. We'll get back to you soon.
-              </p>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen">
