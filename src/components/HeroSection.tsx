@@ -8,7 +8,7 @@ import clinicComparison from "@/assets/clinic-comparison.jpg";
 import heroImage1 from "@/assets/hero-image-1.jpg"
 
 export const HeroSection = () => {
-  return <section className="relative bg-background overflow-hidden">
+  return (<section className="relative bg-background overflow-hidden">
       {/* Hero Background */}
       <div className="absolute inset-0">
         <img src={heroImage} alt="Professional fertility clinic" className="w-full h-full object-cover opacity-10" />
@@ -75,30 +75,4 @@ export const HeroSection = () => {
       </div>
     </section>
   );
-};
-
-const hairLossTypes = [{
-  name: "Stage 1",
-  stage: "No Hair Loss"
-}, {
-  name: "Stage 2",
-  stage: "Minimal Loss"
-}, {
-  name: "Stage 3",
-  stage: "Receding Hairline"
-}, {
-  name: "Stage 4",
-  stage: "Crown Thinning"
-}, {
-  name: "Stage 5",
-  stage: "Advanced Loss"
-}, {
-  name: "Stage 6",
-  stage: "Extensive Loss"
-}, {
-  name: "Stage 7",
-  stage: "Severe Loss"
-}, {
-  name: "Female Pattern",
-  stage: "Women's Hair Loss"
-}];
+}
