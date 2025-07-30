@@ -65,7 +65,7 @@ export const HeroSection = () => {
           <div className="relative">
             <Card className="overflow-hidden shadow-2xl">
               <img 
-                src={clinicComparison} 
+                src={heroImage} 
                 alt="Fertility clinic comparison" 
                 className="w-full h-auto"
               />

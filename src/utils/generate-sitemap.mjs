@@ -15,11 +15,25 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// US States mapping
+const US_STATES = {
+  'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+  'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+  'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+  'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+  'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+  'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+  'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+  'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+  'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+  'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+};
+
 async function main() {
   try {
     console.log('Fetching clinics from Supabase...');
     
-    // Fetch all fertility clinics with country, city, slug
+    // Fetch all fertility clinics with slug and branches
     const { data: clinics, error } = await supabase
       .from('fertility_clinics')
       .select('slug, branches');
@@ -82,51 +96,55 @@ async function main() {
     writeFileSync(path.resolve('public', 'sitemap-clinics.xml'), clinicsSitemap);
     console.log('✓ Clinics sitemap generated');
 
-    // --- Countries Sitemap ---
-    console.log('Generating countries sitemap...');
-    const uniqueCountries = new Set();
+    // --- States Sitemap ---
+    console.log('Generating states sitemap...');
+    const uniqueStates = new Set();
     
     if (clinics && clinics.length > 0) {
       for (const clinic of clinics) {
         if (clinic.branches && Array.isArray(clinic.branches)) {
           clinic.branches.forEach(branch => {
-            if (branch.country) {
-              uniqueCountries.add(branch.country);
+            if (branch["city-zip"]) {
+              const stateMatch = branch["city-zip"].match(/,\s*([A-Z]{2})\s+\d{5}/);
+              if (stateMatch && US_STATES[stateMatch[1]]) {
+                uniqueStates.add(stateMatch[1]);
+              }
             }
           });
         }
       }
     }
     
-    const countriesSmStream = new SitemapStream({ hostname: SITE_URL });
+    const statesSmStream = new SitemapStream({ hostname: SITE_URL });
     
-    if (uniqueCountries.size > 0) {
-      for (const country of uniqueCountries) {
-        const slug = country.toLowerCase().replace(/\s+/g, '-');
-        countriesSmStream.write({ url: `/en/find-a-clinic/${slug}`, changefreq: 'weekly', priority: 0.8 });
+    if (uniqueStates.size > 0) {
+      for (const stateCode of uniqueStates) {
+        const stateName = US_STATES[stateCode];
+        const slug = stateName.toLowerCase().replace(/\s+/g, '-');
+        statesSmStream.write({ url: `/en/find-a-clinic/${slug}`, changefreq: 'weekly', priority: 0.8 });
         // Also add without /en prefix
-        countriesSmStream.write({ url: `/find-a-clinic/${slug}`, changefreq: 'weekly', priority: 0.8 });
+        statesSmStream.write({ url: `/find-a-clinic/${slug}`, changefreq: 'weekly', priority: 0.8 });
       }
     } else {
-      // Add example country URLs
-      console.log('No countries found, adding example URLs...');
-      const exampleCountries = [
-        '/en/find-a-clinic/usa',
-        '/en/find-a-clinic/uk',
-        '/en/find-a-clinic/turkey',
-        '/find-a-clinic/usa',
-        '/find-a-clinic/uk',
-        '/find-a-clinic/turkey',
+      // Add example state URLs
+      console.log('No states found, adding example URLs...');
+      const exampleStates = [
+        '/en/find-a-clinic/california',
+        '/en/find-a-clinic/new-york',
+        '/en/find-a-clinic/texas',
+        '/find-a-clinic/california',
+        '/find-a-clinic/new-york',
+        '/find-a-clinic/texas',
       ];
-      for (const url of exampleCountries) {
-        countriesSmStream.write({ url, changefreq: 'weekly', priority: 0.8 });
+      for (const url of exampleStates) {
+        statesSmStream.write({ url, changefreq: 'weekly', priority: 0.8 });
       }
     }
     
-    countriesSmStream.end();
-    const countriesSitemap = await streamToPromise(countriesSmStream).then(sm => sm.toString());
-    writeFileSync(path.resolve('public', 'sitemap-countries.xml'), countriesSitemap);
-    console.log('✓ Countries sitemap generated');
+    statesSmStream.end();
+    const statesSitemap = await streamToPromise(statesSmStream).then(sm => sm.toString());
+    writeFileSync(path.resolve('public', 'sitemap-states.xml'), statesSitemap);
+    console.log('✓ States sitemap generated');
 
     // --- Cities Sitemap ---
     console.log('Generating cities sitemap...');
@@ -136,8 +154,11 @@ async function main() {
       for (const clinic of clinics) {
         if (clinic.branches && Array.isArray(clinic.branches)) {
           clinic.branches.forEach(branch => {
-            if (branch.city) {
-              uniqueCities.add(branch.city);
+            if (branch["city-zip"]) {
+              const cityName = branch["city-zip"].split(",")[0]?.trim();
+              if (cityName) {
+                uniqueCities.add(cityName);
+              }
             }
           });
         }
@@ -158,11 +179,11 @@ async function main() {
       console.log('No cities found, adding example URLs...');
       const exampleCities = [
         '/en/find-a-clinic/new-york',
-        '/en/find-a-clinic/london',
-        '/en/find-a-clinic/istanbul',
+        '/en/find-a-clinic/los-angeles',
+        '/en/find-a-clinic/chicago',
         '/find-a-clinic/new-york',
-        '/find-a-clinic/london',
-        '/find-a-clinic/istanbul',
+        '/find-a-clinic/los-angeles',
+        '/find-a-clinic/chicago',
       ];
       for (const url of exampleCities) {
         citiesSmStream.write({ url, changefreq: 'weekly', priority: 0.7 });
@@ -179,7 +200,7 @@ async function main() {
     const sitemapIndexUrls = [
       `${SITE_URL}/sitemap-general.xml`,
       `${SITE_URL}/sitemap-clinics.xml`,
-      `${SITE_URL}/sitemap-countries.xml`,
+      `${SITE_URL}/sitemap-states.xml`,
       `${SITE_URL}/sitemap-cities.xml`,
     ];
     
