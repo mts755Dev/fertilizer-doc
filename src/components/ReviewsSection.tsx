@@ -1,34 +1,64 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Star, Shield, Globe, DollarSign, TrendingUp, Clock, Users, Baby } from "lucide-react";
+import { Star, MapPin, Users, Shield, Globe, TrendingUp, Heart, Activity, Zap, Target } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const ReviewsSection = () => {
   return (
-    <section className="py-20 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 bg-medical-blue-light relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}></div>
+      </div>
 
-        {/* Top States Section */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Stats Section */}
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Trusted by Thousands of Patients
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Join thousands of patients who have found their perfect fertility clinic through our platform
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+          {stats.map((stat, index) => (
+            <div key={index} className="text-center">
+              <div className="flex justify-center mb-4">
+                <stat.icon className="w-8 h-8 text-primary" />
+              </div>
+              <div className="text-3xl font-bold text-foreground mb-2">{stat.value}</div>
+              <div className="text-muted-foreground">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Top Locations */}
         <div className="mb-16">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
-              Top Fertility States
-            </h2>
-          </div>
-          
+          <h3 className="text-2xl font-bold text-foreground text-center mb-8">
+            Popular Fertility Clinic Locations
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {topLocations.map((location, index) => (
-              <Link key={index} to={`/en/find-a-clinic/${location.slug}`} className="block">
+              <Link key={index} to={`/en/find-a-clinic/${location.slug}`}>
                 <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-2 cursor-pointer">
                   <div className="relative h-48">
                     <img 
                       src={location.image} 
-                      alt={`${location.country} landmark`} 
+                      alt={location.countryName} 
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                    <div className="absolute bottom-4 left-4">
-                      <h3 className="text-white font-bold text-lg">{location.countryName}</h3>
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <h4 className="font-bold text-lg">{location.countryName}</h4>
+                      <p className="text-sm opacity-90 mb-2">{location.description}</p>
+                      <div className="flex items-center space-x-2">
+                        <Star className="w-4 h-4 fill-warning-amber text-warning-amber" />
+                        <span className="text-sm">{location.rating}</span>
+                        <span className="text-sm opacity-75">({location.reviews} reviews)</span>
+                      </div>
                     </div>
                   </div>
                 </Card>
@@ -37,53 +67,38 @@ export const ReviewsSection = () => {
           </div>
         </div>
 
-        {/* Service Categories */}
+        {/* Treatment Options */}
         <div className="mb-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
-              Fertility Treatment Options
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Find the right fertility treatment for your journey
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {treatmentOptions.map((treatment, index) => (
-              <Card key={index} className="p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-                <CardContent className="p-0 text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <treatment.icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">{treatment.title}</h3>
-                  <p className="text-muted-foreground">{treatment.description}</p>
-                </CardContent>
+          <h3 className="text-2xl font-bold text-foreground text-center mb-8">
+            Comprehensive Fertility Treatments
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {treatmentOptions.map((option, index) => (
+              <Card key={index} className="text-center p-6 hover:shadow-lg transition-all duration-300">
+                <div className="flex justify-center mb-4">
+                  <option.icon className="w-12 h-12 text-primary" />
+                </div>
+                <h4 className="font-bold text-lg mb-2">{option.title}</h4>
+                <p className="text-muted-foreground text-sm">{option.description}</p>
               </Card>
             ))}
           </div>
         </div>
 
-        {/* Advantages Section */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-foreground mb-8">
-            The advantages of using FertilityIQ
-          </h2>
-          <p className="text-lg text-muted-foreground mb-12">
-            We promise to offer objective reviews of fertility treatments and success rates
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-8">
+        {/* Advantages */}
+        <div>
+          <h3 className="text-2xl font-bold text-foreground text-center mb-8">
+            Why Choose FertilityIQ?
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {advantages.map((advantage, index) => (
-              <Card key={index} className="p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <CardContent className="p-0 text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <advantage.icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">{advantage.title}</h3>
-                  <p className="text-sm font-medium text-primary mb-2">{advantage.subtitle}</p>
-                  <p className="text-muted-foreground">{advantage.description}</p>
-                </CardContent>
-              </Card>
+              <div key={index} className="text-center">
+                <div className="flex justify-center mb-4">
+                  <advantage.icon className="w-12 h-12 text-primary" />
+                </div>
+                <h4 className="font-bold text-lg mb-2">{advantage.title}</h4>
+                <p className="text-muted-foreground">{advantage.description}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -142,42 +157,39 @@ const treatmentOptions = [
   {
     title: "IVF Treatment",
     description: "In vitro fertilization with personalized protocols",
-    icon: Baby
+    icon: Activity
   },
   {
     title: "IUI Procedures",
     description: "Intrauterine insemination for fertility enhancement",
-    icon: Baby
+    icon: Zap
   },
   {
     title: "Egg Freezing",
     description: "Preserve fertility for future family planning",
-    icon: Baby
+    icon: Target
   },
   {
     title: "Genetic Testing",
     description: "Advanced screening for healthy pregnancies",
-    icon: Baby
+    icon: Heart
   }
 ];
 
 const advantages = [
   {
     icon: Globe,
-    title: "Comprehensive Fertility Directory",
-    subtitle: "Over 2,000 reviews",
-    description: "Compare over 2,000 reviews of real patients and more than 800 fertility clinics worldwide."
+    title: "Global Network",
+    description: "Access to fertility clinics worldwide with verified credentials and success rates"
   },
   {
     icon: Shield,
-    title: "Expert Fertility Advisors",
-    subtitle: "Free expert advice",
-    description: "Let one of our fertility experts advise you or dive into our extensive treatment guides."
+    title: "Verified Clinics",
+    description: "All clinics are thoroughly vetted and verified for quality and safety standards"
   },
   {
-    icon: DollarSign,
-    title: "Cost Comparison Tools",
-    subtitle: "Save up to 40%",
-    description: "The free, fast and non-binding comparison can save you up to 40% on the cost of treatment."
+    icon: TrendingUp,
+    title: "Success Rates",
+    description: "Transparent success rates and patient outcomes to help you make informed decisions"
   }
 ];

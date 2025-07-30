@@ -32,39 +32,39 @@ export const FAQSection = () => {
 
 const faqs = [
   {
-    question: "Why a hair transplantation?",
-    answer: "Hair transplantations are an excellent, permanent solution to many forms of hair loss. It is the most natural, effective way to regain a full head of hair and restore your self-confidence."
+    question: "What is fertility treatment and when should I consider it?",
+    answer: "Fertility treatment helps couples and individuals who are having difficulty conceiving naturally. You should consider fertility treatment if you've been trying to conceive for over a year (or 6 months if you're over 35), have irregular periods, or have been diagnosed with fertility issues."
   },
   {
-    question: "Which hair transplantation methods are available?",
-    answer: "Current hair transplant methods include the FUT, FUE, DHI, ARTAS and NeoGraft techniques. Read our comprehensive guide on hair transplant methods for more information. Even though it is not currently available, many experts hope that stem cell hair transplantation will revolutionize the hair loss industry."
+    question: "What fertility treatment methods are available?",
+    answer: "Common fertility treatments include IVF (In Vitro Fertilization), IUI (Intrauterine Insemination), egg freezing, sperm donation, embryo donation, and genetic testing. Each method is suitable for different fertility challenges and your doctor will recommend the best approach for your specific situation."
   },
   {
-    question: "How much does a hair transplantation cost?",
-    answer: "Hair transplantation costs vary widely depending on the technique used as well as location of the clinic. There was an average global cost of 2.98 USD per graft in 2019. Read our hair transplant cost study for more information on hair transplant prices. Hair transplants in turkey have the lowest price with 1.07 USD per graft."
+    question: "How much does fertility treatment cost?",
+    answer: "Fertility treatment costs vary significantly depending on the method, clinic location, and individual circumstances. IVF typically costs between $12,000-$25,000 per cycle, while IUI costs around $300-$1,000 per cycle. Many clinics offer financing options and some insurance plans provide partial coverage."
   },
   {
-    question: "Does my health insurance cover the costs?",
-    answer: "Hair transplants are an elective cosmetic surgery for most patients, as a result health insurance usually does not cover the costs. Health insurance may cover the cost of a hair transplant for scar coverage."
+    question: "Does health insurance cover fertility treatment?",
+    answer: "Coverage varies by insurance plan and state. Some states mandate fertility coverage, while others don't. Many plans cover diagnostic testing but may have limited coverage for treatments like IVF. It's important to check with your insurance provider about your specific coverage options."
   },
   {
-    question: "What are the chances & risks of hair transplantation?",
-    answer: "Hair transplantation is a very low-risk cosmetic surgery with minor side effects associated with the procedure. Read our article on hair restoration side effects for more information."
+    question: "What are the success rates and risks of fertility treatment?",
+    answer: "Success rates depend on age, fertility diagnosis, and treatment method. IVF success rates range from 20-40% per cycle for women under 35. Risks include multiple pregnancies, ovarian hyperstimulation syndrome, and emotional stress. Your fertility specialist will discuss all risks and benefits before treatment."
   },
   {
-    question: "Is there an alternative to hair transplantation?",
-    answer: "There are many alternative treatment forms to a hair transplant, e.g. finasteride or minoxidil, however, none guarantee the same results as a transplantation. According to medihair's hair loss statistics finasteride is the most common prescribed hair loss treatment (66.40%). Read our article on hair loss treatment methods which compares over 38 various methods with information on pricing."
+    question: "Are there alternatives to fertility treatment?",
+    answer: "Yes, alternatives include lifestyle changes (diet, exercise, stress management), ovulation tracking, natural family planning, and addressing underlying health conditions. However, for many couples, medical fertility treatment offers the best chance of success."
   },
   {
-    question: "When is hair transplantation useful? At what age?",
-    answer: "Patients over the age of 35, with an ample donor area suffering from androgenetic alopecia or male pattern baldness are optimal candidates for hair transplants. Hair transplantation can be useful for many other patients however and it is important to get your hair loss analyzed to find the best treatment method for you. Also, patients over the age of 25 can be a suitable candidate in combination with right hair loss medication. According to our hair transplant statistics most of the patients are between 30 and 45 before their hair transplant."
+    question: "At what age should I consider fertility treatment?",
+    answer: "Fertility naturally declines with age, especially after 35. If you're under 35, try for a year before seeking treatment. If you're 35-40, try for 6 months. If you're over 40, consider consulting a fertility specialist immediately. Early intervention often leads to better outcomes."
   },
   {
-    question: "Where is hair transplantation possible?",
-    answer: "The hair transplantation industry is rapidly growing and there are clinics available all over the world. Just click on compare verified clinics to get more information about possible clinics."
+    question: "Where can I find quality fertility clinics?",
+    answer: "Quality fertility clinics are available worldwide, with many excellent options in major cities. Use our platform to compare verified fertility clinics, read patient reviews, and check success rates. Look for clinics with board-certified reproductive endocrinologists and good success rates."
   },
   {
-    question: "Which doctor is the best for hair transplantation?",
-    answer: "Different surgeons specialize in different hair transplantation methods which may work better for some candidates than others. It is important to review many factors before deciding on the most appropriate hair surgeon for your individual needs. Therefore, it is difficult to generalize who is the best hair transplant doctor."
+    question: "How do I choose the best fertility doctor?",
+    answer: "Look for board-certified reproductive endocrinologists with experience in your specific fertility issues. Consider success rates, patient reviews, communication style, and clinic location. It's important to feel comfortable with your doctor as fertility treatment is a personal journey."
   }
 ];

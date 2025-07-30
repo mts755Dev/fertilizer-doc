@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, ChevronDown, Baby } from "lucide-react";
+import { MapPin, Phone, ChevronDown, Heart } from "lucide-react";
 
 export const Navbar = () => {
   return (
@@ -11,7 +11,7 @@ export const Navbar = () => {
           {/* Logo */}
           <Link to="/en" className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Baby className="w-5 h-5 text-primary-foreground" />
+              <Heart className="w-5 h-5 text-primary-foreground" />
             </div>
             <span className="text-xl font-bold text-foreground">FertilityIQ</span>
           </Link>
@@ -35,7 +35,7 @@ export const Navbar = () => {
           <div className="flex items-center justify-center space-x-4">
             <Link to="/en/fertility-clinics">
               <Button className="bg-primary hover:bg-primary/90 flex items-center space-x-2">
-                <Baby className="w-4 h-4" />
+                <Heart className="w-4 h-4" />
                 <span>Find Fertility Clinics</span>
               </Button>
             </Link>

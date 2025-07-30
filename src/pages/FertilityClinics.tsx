@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -132,6 +132,7 @@ export default function FertilityClinics() {
   const { stateName } = useParams<{ stateName: string }>();
   const { data: clinics, isLoading, error } = useFertilityData();
   const navigate = useNavigate();
+  const resultsRef = useRef<HTMLDivElement>(null);
   
   // Debug logging
   console.log('FertilityClinics - clinics data:', clinics);
@@ -148,9 +149,20 @@ export default function FertilityClinics() {
   const clinicsPerPage = 10;
 
   // Function to get random clinic image
-  const getClinicImage = (index: number) => {
+  const getClinicImage = (clinic: FertilityClinic) => {
     const images = [clinic1, clinic2, clinic3, clinic4, clinic5];
-    return images[index % images.length];
+    
+    // Use clinic slug to generate a consistent index that doesn't change with filtering/pagination
+    let hash = 0;
+    for (let i = 0; i < clinic.slug.length; i++) {
+      const char = clinic.slug.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    
+    // Use absolute value and modulo to get a consistent index
+    const index = Math.abs(hash) % images.length;
+    return images[index];
   };
 
   // Extract unique states from clinic branches
@@ -190,7 +202,20 @@ export default function FertilityClinics() {
   const getClinicState = (clinic: FertilityClinic) => {
     if (clinic.branches.length === 0) return 'United States';
     
-    // Get the first branch's state
+    // If we're filtering by a specific state, show that state
+    if (selectedState !== "all") {
+      const branchInSelectedState = clinic.branches.find(branch => {
+        if (!branch["city-zip"]) return false;
+        const match = branch["city-zip"].match(/,\s*([A-Z]{2})\s+\d{5}/);
+        return match && match[1] === selectedState;
+      });
+      
+      if (branchInSelectedState) {
+        return getStateFullName(selectedState);
+      }
+    }
+    
+    // Otherwise, get the first branch's state
     const firstBranch = clinic.branches[0];
     if (!firstBranch["city-zip"]) return 'United States';
     
@@ -214,79 +239,66 @@ export default function FertilityClinics() {
   // Memoized search matching function
   const matchesSearchTerm = useCallback((clinic: FertilityClinic, searchTerm: string) => {
     if (!searchTerm) return true;
-    
     const searchLower = searchTerm.toLowerCase();
-    
-    // Debug logging for California search
-    if (searchLower === 'california') {
-      console.log('Searching for California in clinic:', clinic.name);
-      console.log('Clinic branches:', clinic.branches);
-    }
-    
-    // Check clinic name and ID first (fastest)
-    if (clinic.name.toLowerCase().includes(searchLower) || 
-        clinic.id.includes(searchTerm)) {
-      if (searchLower === 'california') {
-        console.log('Found California in clinic name or ID:', clinic.name);
-      }
+
+    // Check clinic name and ID
+    if (clinic.name.toLowerCase().includes(searchLower) || clinic.id.includes(searchTerm)) {
       return true;
     }
-    
-    // Check branches
+
+    // Check all branches for city, state code, or state full name
     const branchMatch = clinic.branches.some((branch) => {
-      if (!branch["city-zip"]) return false;
-      
-      const cityZipLower = branch["city-zip"].toLowerCase();
-      
-      if (searchLower === 'california') {
-        console.log('Checking branch city-zip:', branch["city-zip"]);
-      }
-      
-      // Quick checks first
-      if (cityZipLower.includes(searchLower) || 
-          branch.phone?.includes(searchTerm)) {
-        if (searchLower === 'california') {
-          console.log('Found California in city-zip or phone:', branch["city-zip"]);
-        }
-        return true;
-      }
-      
-      // Check zip code
-      const zipMatch = branch["city-zip"].match(/\d{5}/);
-      if (zipMatch && zipMatch[0].includes(searchTerm)) {
-        return true;
-      }
-      
-      // Check state name (most expensive, do last)
-      const stateMatch = branch["city-zip"].match(/,\s*([A-Z]{2})\s+\d{5}/);
+      const cityZip = branch["city-zip"] || "";
+      const cityZipLower = cityZip.toLowerCase();
+      // Try to extract state code (e.g., CA) from city-zip
+      let stateCode = "";
+      const stateMatch = cityZip.match(/,\s*([A-Z]{2})\s+\d{5}/);
       if (stateMatch) {
-        const stateCode = stateMatch[1];
-        const stateFullName = getStateFullName(stateCode);
-        if (searchLower === 'california') {
-          console.log('State match found:', stateCode, 'Full name:', stateFullName);
-        }
-        return stateFullName.toLowerCase().includes(searchLower);
+        stateCode = stateMatch[1];
       }
-      
-      return false;
+      const stateFullName = stateCode ? getStateFullName(stateCode).toLowerCase() : "";
+      // Also try to extract city name
+      const cityName = cityZip.split(",")[0].trim().toLowerCase();
+      // Check city, state code, state full name
+      return (
+        cityName.includes(searchLower) ||
+        (stateCode && stateCode.toLowerCase().includes(searchLower)) ||
+        (stateFullName && stateFullName.includes(searchLower))
+      );
     });
-    
-    if (searchLower === 'california' && !branchMatch) {
-      console.log('No California match found for clinic:', clinic.name);
-    }
-    
-    return branchMatch;
+    if (branchMatch) return true;
+    return false;
   }, []);
 
   // Memoized state matching function
   const matchesStateFilter = useCallback((clinic: FertilityClinic, selectedState: string) => {
     if (selectedState === "all") return true;
     
-    return clinic.branches.some((branch) => {
+    // Debug logging for Alabama filter
+    if (selectedState === "AL") {
+      console.log('Checking clinic for Alabama filter:', clinic.name);
+      console.log('Clinic branches:', clinic.branches);
+    }
+    
+    // Check if ANY branch is in the selected state
+    const hasBranchInState = clinic.branches.some((branch) => {
       if (!branch["city-zip"]) return false;
       const match = branch["city-zip"].match(/,\s*([A-Z]{2})\s+\d{5}/);
-      return match && match[1] === selectedState;
+      if (match) {
+        const branchState = match[1];
+        if (selectedState === "AL") {
+          console.log('Branch state:', branchState, 'Selected state:', selectedState, 'Match:', branchState === selectedState);
+        }
+        return branchState === selectedState;
+      }
+      return false;
     });
+    
+    if (selectedState === "AL") {
+      console.log('Clinic', clinic.name, 'has branch in Alabama:', hasBranchInState);
+    }
+    
+    return hasBranchInState;
   }, []);
 
   // Memoized sorting function
@@ -337,6 +349,16 @@ export default function FertilityClinics() {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, selectedState, sortBy]);
+
+  // Scroll to results when page changes
+  useEffect(() => {
+    if (resultsRef.current && currentPage > 1) {
+      resultsRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  }, [currentPage]);
 
   
 
@@ -420,7 +442,7 @@ export default function FertilityClinics() {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <Input
                       type="text"
-                      placeholder="Enter city, state, zip code, or clinic ID (e.g., New York, 90210, CA)"
+                      placeholder="Enter city, state or clinic name"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-10 h-12 text-lg"
@@ -470,7 +492,7 @@ export default function FertilityClinics() {
 
              {/* Results Section - Show clinic cards when searching or on state pages */}
       {(searchTerm || stateName) && (
-        <section className="py-12 px-4 bg-white">
+        <section ref={resultsRef} className="py-12 px-4 bg-white">
           <div className="max-w-7xl mx-auto">
             {/* Results Controls */}
             <div className="flex items-center justify-between mb-8">
@@ -494,19 +516,7 @@ export default function FertilityClinics() {
                   </Badge>
                 )}
               </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600">Sort by:</span>
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="best-rating">Best Rating</SelectItem>
-                    <SelectItem value="name">Name</SelectItem>
-                    <SelectItem value="annual-cycles">Annual Cycles</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              
             </div>
 
             {/* Clinic Listings Title */}
@@ -518,15 +528,15 @@ export default function FertilityClinics() {
             </h2>
 
             {/* Results Grid - Detailed Clinic Cards */}
-            <div className="space-y-6">
+            <div className="space-y-8">
               {currentClinics.map((clinic, index) => (
                 <Link key={clinic.id} to={`/en/fertility-clinic/${clinic.slug}`}>
-                  <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer">
+                  <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer mt-3">
                     <div className="flex flex-col lg:flex-row">
                       {/* Clinic Image */}
                       <div className="lg:w-1/3 relative">
                         <img 
-                          src={getClinicImage(index)}
+                          src={getClinicImage(clinic)}
                           alt={`${clinic.name} clinic`}
                           className="w-full h-64 lg:h-full object-cover"
                         />
@@ -566,14 +576,6 @@ export default function FertilityClinics() {
                               <div>
                                 <span className="text-gray-600">Methods: </span>
                                 <span className="font-semibold">IVF, IUI</span>
-                              </div>
-                              <div>
-                                <span className="text-gray-600">Video Consultation: </span>
-                                <span className="font-semibold">Available</span>
-                              </div>
-                              <div>
-                                <span className="text-gray-600">Price: </span>
-                                <span className="font-semibold text-blue-600">$3,000 - $5,000</span>
                               </div>
                               <div>
                                 <span className="text-gray-600">Annual Cycles: </span>

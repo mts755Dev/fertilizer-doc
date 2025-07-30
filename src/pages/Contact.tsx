@@ -92,8 +92,8 @@ const Contact = () => {
     return (
       <div className="min-h-screen">
         <Helmet>
-                  <title>Contact Best Hair Docs - Get in Touch</title>
-        <meta name="description" content="Contact Best Hair Docs for questions, support, or partnership inquiries. We're here to help you on your hair restoration journey." />
+          <title>Contact FertilityIQ - Get in Touch</title>
+          <meta name="description" content="Contact FertilityIQ for questions, support, or partnership inquiries. We're here to help you on your fertility treatment journey." />
         </Helmet>
         <Navbar />
         
@@ -115,17 +115,17 @@ const Contact = () => {
   return (
     <div className="min-h-screen">
       <Helmet>
-                <title>Contact Best Hair Docs - Get in Touch</title>
-        <meta name="description" content="Contact Best Hair Docs for questions, support, or partnership inquiries. We're here to help you on your hair restoration journey." />
-        </Helmet>
-        <Navbar />
+        <title>Contact FertilityIQ - Get in Touch</title>
+        <meta name="description" content="Contact FertilityIQ for questions, support, or partnership inquiries. We're here to help you on your fertility treatment journey." />
+      </Helmet>
+      <Navbar />
       
       <main className="pt-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-foreground mb-4">Contact Us</h1>
             <p className="text-xl text-muted-foreground">
-              Get in touch with our expert team for personalized guidance
+              Get in touch with our expert team for personalized fertility guidance
             </p>
           </div>
 
@@ -213,7 +213,7 @@ const Contact = () => {
                         <FormItem>
                           <FormLabel>Subject</FormLabel>
                           <FormControl>
-                            <Input placeholder="Hair transplant consultation" {...field} />
+                            <Input placeholder="Fertility treatment consultation" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -229,7 +229,7 @@ const Contact = () => {
                           <FormLabel>Message</FormLabel>
                           <FormControl>
                             <Textarea 
-                              placeholder="Tell us about your hair restoration goals..."
+                              placeholder="Tell us about your fertility journey and how we can help..."
                               rows={5}
                               {...field}
                             />

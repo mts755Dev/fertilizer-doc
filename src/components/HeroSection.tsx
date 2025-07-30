@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { ArrowDown, Search, Star, CheckCircle, Users, Award, Baby } from "lucide-react";
+import { ArrowDown, Search, Star, CheckCircle, Users, Award, Heart } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
 import hairLossStages from "@/assets/hair-loss-stages.jpg";
 import clinicComparison from "@/assets/clinic-comparison.jpg";
@@ -15,7 +15,7 @@ export const HeroSection = () => {
         <div className="absolute inset-0 bg-medical-blue-light/90"></div>
       </div>
       
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content Column */}
           <div className="text-center lg:text-left">
@@ -38,7 +38,7 @@ export const HeroSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
               <Link to="/en/fertility-clinics">
                 <Button size="lg" className="bg-primary hover:bg-primary/90 flex items-center space-x-2">
-                  <Baby className="w-5 h-5" />
+                  <Heart className="w-5 h-5" />
                   <span>Find Fertility Clinics</span>
                 </Button>
               </Link>
@@ -47,37 +47,34 @@ export const HeroSection = () => {
             {/* Trust Indicators */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-8 text-muted-foreground">
               <div className="flex items-center space-x-2">
-                <Star className="w-5 h-5 fill-warning-amber text-warning-amber" />
-                <span className="font-medium">4.8/5 Rating</span>
+                <CheckCircle className="w-5 h-5 text-success-green" />
+                <span>Verified Clinics</span>
               </div>
               <div className="flex items-center space-x-2">
-                <CheckCircle className="w-5 h-5 text-success-green" />
-                <span className="font-medium">800+ Verified Clinics</span>
+                <Star className="w-5 h-5 text-warning-amber" />
+                <span>4.8/5 Rating</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Users className="w-5 h-5 text-primary" />
-                <span className="font-medium">2,000+ Reviews</span>
+                <span>15,000+ Patients</span>
               </div>
             </div>
           </div>
 
           {/* Image Column */}
           <div className="relative">
-            <div className="relative">
-              <img src={heroImage} alt="Compare fertility clinics worldwide" className="w-full h-auto rounded-lg shadow-xl" />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent rounded-lg"></div>
-              <div className="absolute bottom-4 left-4 bg-background/95 backdrop-blur-sm rounded-lg p-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-success-green rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium text-foreground">800+ Clinics Available</span>
-                </div>
-              </div>
-            </div>
+            <Card className="overflow-hidden shadow-2xl">
+              <img 
+                src={clinicComparison} 
+                alt="Fertility clinic comparison" 
+                className="w-full h-auto"
+              />
+            </Card>
           </div>
         </div>
-
       </div>
-    </section>;
+    </section>
+  );
 };
 
 const hairLossTypes = [{

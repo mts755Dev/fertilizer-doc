@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, MapPin, Phone, Mail, Calendar, Award, Users, DollarSign, Clock, Shield, Globe, TrendingUp, Baby } from "lucide-react";
+import { Star, MapPin, Phone, Mail, Calendar, Award, Users, DollarSign, Clock, Shield, Globe, TrendingUp, Heart } from "lucide-react";
 import { useFertilityClinicBySlug, useFertilityData } from "@/hooks/useFertilityDataFromSupabase";
 import BookConsultationModal from "@/components/BookConsultationModal";
 import { useState } from "react";
@@ -29,14 +29,22 @@ export default function FertilityClinicDetail() {
   
   // Function to get clinic image based on clinic's position in the original array
   const getClinicImage = () => {
-    if (!allClinics || !clinic) return clinic1;
+    if (!clinic) return clinic1;
     
-    // Find the clinic's index in the original clinics array
-    const clinicIndex = allClinics.findIndex(c => c.id === clinic.id);
-    if (clinicIndex === -1) return clinic1;
-    
+    // Use clinic slug to generate a consistent index that doesn't change with filtering/pagination
     const images = [clinic1, clinic2, clinic3, clinic4, clinic5];
-    return images[clinicIndex % images.length];
+    
+    // Create a consistent hash from the clinic slug
+    let hash = 0;
+    for (let i = 0; i < clinic.slug.length; i++) {
+      const char = clinic.slug.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    
+    // Use absolute value and modulo to get a consistent index
+    const index = Math.abs(hash) % images.length;
+    return images[index];
   };
   
   if (isLoading) {
@@ -97,7 +105,7 @@ export default function FertilityClinicDetail() {
         </div>
         <div className="relative w-full h-full flex items-center justify-center">
           <div className="text-center text-white">
-            <Baby className="w-24 h-24 text-white mx-auto mb-4" />
+            <Heart className="w-24 h-24 text-white mx-auto mb-4" />
             <h1 className="text-4xl md:text-5xl font-bold mb-4">{clinic.name}</h1>
             <div className="flex items-center justify-center space-x-2 mb-4">
               <MapPin className="w-5 h-5 text-white/90" />
@@ -228,11 +236,11 @@ export default function FertilityClinicDetail() {
                 <CardContent className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <Phone className="w-4 h-4 text-muted-foreground" />
-                    <span>{clinic.branches[0]?.phone || 'Contact clinic for phone number'}</span>
+                    <span>{clinic.contact_phone || '(555) 123-4567'}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Mail className="w-4 h-4 text-muted-foreground" />
-                    <span>Contact clinic for email</span>
+                    <span>{clinic.contact_email || 'info@fertilityclinic.com'}</span>
                   </div>
                 </CardContent>
               </Card>

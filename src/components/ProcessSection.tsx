@@ -18,16 +18,32 @@ export const ProcessSection = () => {
     return images[index % images.length];
   };
 
-  // Get 6 random clinics
+  // Get 6 random clinics with valid annual cycles and specialists
   const getRandomClinics = () => {
     if (!clinics || clinics.length === 0) return [];
-    
-    // Shuffle the clinics array and take first 6
-    const shuffled = [...clinics].sort(() => 0.5 - Math.random());
+    // Filter clinics with valid annual cycles and at least 1 specialist
+    const filtered = clinics.filter(clinic => {
+      const hasValidCycles = clinic.annual_cycles && clinic.annual_cycles !== 'N/A';
+      const hasSpecialists = clinic.doctors && clinic.doctors.length > 0;
+      return hasValidCycles && hasSpecialists;
+    });
+    // Shuffle and take first 6
+    const shuffled = [...filtered].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 6);
   };
 
   const randomClinics = getRandomClinics();
+
+  // Helper to get unique state codes for a clinic
+  const getClinicStateCodes = (clinic) => {
+    if (!clinic.branches || clinic.branches.length === 0) return 'N/A';
+    const codes = clinic.branches.map(branch => {
+      const match = branch["city-zip"]?.match(/,\s*([A-Z]{2})\s+\d{5}/);
+      return match ? match[1] : null;
+    }).filter(Boolean);
+    const uniqueCodes = Array.from(new Set(codes));
+    return uniqueCodes.length > 0 ? uniqueCodes.join(', ') : 'N/A';
+  };
 
   return (
     <section className="py-20 bg-medical-blue-light relative overflow-hidden">
@@ -75,7 +91,7 @@ export const ProcessSection = () => {
                       <h3 className="font-bold text-lg">{clinic.name}</h3>
                       <div className="flex items-center space-x-2 text-sm opacity-90">
                         <MapPin className="w-4 h-4" />
-                        <span>{clinic.branches[0]?.cityZip || 'Multiple Locations'}</span>
+                        <span>{getClinicStateCodes(clinic)}</span>
                       </div>
                     </div>
                   </div>

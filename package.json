@@ -9,7 +9,8 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "migrate-to-supabase": "node scripts/migrate-to-supabase.js"
+    "migrate-to-supabase": "node scripts/migrate-to-supabase.js",
+    "generate-sitemaps": "node scripts/generate-basic-sitemaps.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

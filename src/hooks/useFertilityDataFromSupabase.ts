@@ -11,6 +11,8 @@ function transformClinicData(clinic: FertilityClinic) {
     slug: clinic.slug,
     name: clinic.name,
     url: clinic.url,
+    contact_phone: clinic.contact_phone,
+    contact_email: clinic.contact_email,
     annual_cycles: clinic.annual_cycles || "N/A",
     "clinic_sr:annual_cycles": clinic.annual_cycles || "N/A",
     "national_avg:annual_cycles": clinic.national_avg_annual_cycles || "N/A",
