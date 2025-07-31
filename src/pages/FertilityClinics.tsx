@@ -668,20 +668,20 @@ export default function FertilityClinics() {
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Browse by State</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-              {states.slice(0, 24).map((state) => {
+              {states.map((state) => {
                 const stateClinics = getClinicsByState(state);
                 const stateFullName = getStateFullName(state);
                 const stateSlug = Object.keys(STATE_NAMES).find(key => STATE_NAMES[key] === state) || state.toLowerCase();
                 return (
                   <Link key={state} to={`/en/find-a-clinic/${stateSlug}`}>
-                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                      <CardContent className="p-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <Building2 className="w-4 h-4 text-purple-600" />
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer h-20">
+                      <CardContent className="p-4 h-full">
+                        <div className="flex items-center space-x-3 h-full">
+                          <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <Building2 className="w-4 h-4 text-emerald-600" />
                           </div>
-                          <div className="flex-1">
-                            <div className="font-semibold text-gray-900">{state}</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-semibold text-gray-900 text-sm leading-tight line-clamp-2">{stateFullName}</div>
                             <div className="text-sm text-gray-600">{stateClinics.length} clinics</div>
                           </div>
                         </div>

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { ArrowDown, Search, Star, CheckCircle, Users, Award, Heart } from "lucide-react";
-import heroImage from "@/assets/hero-image.jpg";
+import heroImage from "@/assets/hero-image-fert.webp";
 import hairLossStages from "@/assets/hair-loss-stages.jpg";
 import clinicComparison from "@/assets/clinic-comparison.jpg";
 import heroImage1 from "@/assets/hero-image-1.jpg"
@@ -35,8 +35,8 @@ export const HeroSection = () => {
               Success rates by age group, doctor profiles, and patient reviews - 100% free
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <Link to="/en/fertility-clinics">
+            <div className="flex flex-col sm:flex-row gap-4 mb-8 justify-center lg:justify-start">
+              <Link to="/en/fertility-clinics" className="flex justify-center lg:justify-start">
                 <Button size="lg" className="bg-primary hover:bg-primary/90 flex items-center space-x-2">
                   <Heart className="w-5 h-5" />
                   <span>Find Fertility Clinics</span>

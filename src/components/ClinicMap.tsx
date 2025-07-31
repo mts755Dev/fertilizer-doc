@@ -376,20 +376,65 @@ export const ClinicMap = ({ locations, clinicName, className = '' }: ClinicMapPr
   }
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      {/* Office Count Indicator */}
+    <div className={`space-y-6 ${className}`}>
+      {/* Office Count Header - Make it bigger */}
       {locations.length > 0 && (
-        <div className="text-sm text-muted-foreground">
-          This clinic has {locations.length} office{locations.length !== 1 ? 's' : ''}
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-6">
+            This clinic has {locations.length} office{locations.length !== 1 ? 's' : ''}
+          </h2>
         </div>
       )}
 
-      {/* Map Container */}
+      {/* Clinic Addresses List First */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <MapPin className="w-5 h-5 text-primary" />
-            <span>Clinic Locations</span>
+            <span>Clinic Addresses</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            {locations.map((location, index) => (
+              <div key={`${location.name}-${index}`} className="flex items-start space-x-4">
+                {/* Location Icon */}
+                <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mt-1">
+                  <MapPin className="w-5 h-5 text-primary" />
+                </div>
+                
+                {/* Location Details */}
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-lg font-semibold text-foreground mb-1">
+                    {location.name}
+                  </h4>
+                  <div className="space-y-1">
+                    <p className="text-muted-foreground">
+                      {location.address}
+                    </p>
+                    <p className="text-muted-foreground">
+                      {location.cityZip}
+                    </p>
+                  </div>
+                  {location.phone && (
+                    <div className="flex items-center space-x-2 text-sm text-muted-foreground mt-3">
+                      <Phone className="w-4 h-4" />
+                      <span>{location.phone}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Map Container - Now below addresses */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <MapPin className="w-5 h-5 text-primary" />
+            <span>Map View</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
