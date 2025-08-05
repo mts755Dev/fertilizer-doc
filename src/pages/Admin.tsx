@@ -345,7 +345,10 @@ const Admin = () => {
           <Button onClick={handleLogout} variant="outline">Logout</Button>
         </div>
 
-        <Tabs value={tab} onValueChange={setTab} className="space-y-6">
+        <Tabs value={tab} onValueChange={(value) => {
+          setTab(value);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }} className="space-y-6">
           <TabsList>
             <TabsTrigger value="clinics" className="flex items-center gap-2">
               <Building2 className="w-4 h-4" />
