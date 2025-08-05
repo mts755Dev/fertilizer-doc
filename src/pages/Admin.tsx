@@ -153,6 +153,11 @@ const Admin = () => {
       branches: clinic.branches || [{ name: "", street: "", "city-zip": "", phone: "" }],
       description: clinic.description || ""
     });
+    
+    // Scroll to the top form when editing
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const handleDelete = async (id) => {
@@ -268,7 +273,7 @@ const Admin = () => {
         });
         setEditingClinic(null);
         setForm({
-          name: "", url: "", annual_cycles: "", national_avg_annual_cycles: "",
+          name: "", url: "", contact_phone: "", contact_email: "", annual_cycles: "", national_avg_annual_cycles: "",
           clinic_sr_under35: "", national_avg_under35: "", clinic_sr_35to37: "", national_avg_35to37: "",
           clinic_sr_38to40: "", national_avg_38to40: "", clinic_sr_over40: "", national_avg_over40: "",
           doctors: [{ name: "", photo: "" }], branches: [{ name: "", street: "", "city-zip": "", phone: "" }], description: ""
@@ -300,7 +305,7 @@ const Admin = () => {
           description: "Clinic added successfully",
         });
         setForm({
-          name: "", url: "", annual_cycles: "", national_avg_annual_cycles: "",
+          name: "", url: "", contact_phone: "", contact_email: "", annual_cycles: "", national_avg_annual_cycles: "",
           clinic_sr_under35: "", national_avg_under35: "", clinic_sr_35to37: "", national_avg_35to37: "",
           clinic_sr_38to40: "", national_avg_38to40: "", clinic_sr_over40: "", national_avg_over40: "",
           doctors: [{ name: "", photo: "" }], branches: [{ name: "", street: "", "city-zip": "", phone: "" }], description: ""
@@ -357,7 +362,7 @@ const Admin = () => {
           </TabsList>
 
           <TabsContent value="clinics" className="space-y-6">
-            <Card>
+            <Card ref={formRef}>
               <CardHeader>
                 <CardTitle>{editingClinic ? "Edit Clinic" : "Add Clinic"}</CardTitle>
               </CardHeader>
@@ -655,7 +660,7 @@ const Admin = () => {
                       <Button type="button" variant="outline" onClick={() => {
                         setEditingClinic(null);
                         setForm({
-                          name: "", url: "", annual_cycles: "", national_avg_annual_cycles: "",
+                          name: "", url: "", contact_phone: "", contact_email: "", annual_cycles: "", national_avg_annual_cycles: "",
                           clinic_sr_under35: "", national_avg_under35: "", clinic_sr_35to37: "", national_avg_35to37: "",
                           clinic_sr_38to40: "", national_avg_38to40: "", clinic_sr_over40: "", national_avg_over40: "",
                           doctors: [{ name: "", photo: "" }], branches: [{ name: "", street: "", "city-zip": "", phone: "" }], description: ""
