@@ -6,7 +6,7 @@ import 'dotenv/config';
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-const SITE_URL = process.env.VITE_SITE_URL || 'https://fertilizer-doc.vercel.app';
+const SITE_URL = process.env.VITE_SITE_URL || 'https://www.eggtility.com';
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   console.error('Missing Supabase credentials in environment variables.');

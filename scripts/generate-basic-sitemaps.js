@@ -2,7 +2,7 @@ import { SitemapStream, streamToPromise, SitemapIndexStream } from 'sitemap';
 import { writeFileSync } from 'fs';
 import path from 'path';
 
-const SITE_URL = 'https://fertilityiq.com';
+const SITE_URL = 'https://www.eggtility.com';
 
 async function generateBasicSitemaps() {
   // --- General Pages Sitemap ---
