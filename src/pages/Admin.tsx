@@ -71,6 +71,13 @@ const Admin = () => {
   const [editingReview, setEditingReview] = useState(null);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<string>('');
+  
+  // Modal states for consultation and contact details
+  const [showConsultationModal, setShowConsultationModal] = useState(false);
+  const [selectedConsultation, setSelectedConsultation] = useState(null);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
+  
   const [editReviewForm, setEditReviewForm] = useState({
     rating: 0,
     review_title: '',
@@ -1198,84 +1205,46 @@ const Admin = () => {
                 <div className="space-y-4">
                   {consultationSubmissions.map((submission) => (
                     <div key={submission.id} className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
-                      {/* Header */}
-                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-4 sm:px-6 py-4 border-b border-gray-100">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-100">
+                        <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-full flex items-center justify-center text-white font-semibold text-sm sm:text-lg">
+                            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
                               {submission.name.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                              <h3 className="font-bold text-gray-900 text-base sm:text-lg">{submission.name}</h3>
+                              <h3 className="font-bold text-gray-900 text-lg">{submission.name}</h3>
+                              <p className="text-sm text-gray-600">{submission.email}</p>
                             </div>
                           </div>
-                          <div className="text-left sm:text-right">
+                          <div className="text-right">
                             <div className="text-xs text-gray-500 bg-white px-2 py-1 rounded-full border">
                               {new Date(submission.created_at).toLocaleDateString()}
-                            </div>
-                            <div className="text-xs text-gray-400 mt-1">
-                              {new Date(submission.created_at).toLocaleTimeString()}
                             </div>
                           </div>
                         </div>
                       </div>
-
-                      {/* Content */}
-                      <div className="p-4 sm:p-6">
-                        {/* Clinic Info */}
-                        <div className="mb-4">
-                          <div className="flex items-center gap-2 mb-2">
+                      <div className="p-6">
+                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg mb-4">
+                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                             <Building2 className="w-4 h-4 text-blue-600" />
-                            <span className="text-sm font-medium text-gray-700">Clinic</span>
                           </div>
-                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100">
-                            {submission.clinic_name}
-                          </Badge>
-                        </div>
-
-                        {/* Contact Info */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                            <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                              <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                              </svg>
-                            </div>
-                            <div>
-                              <p className="text-xs text-gray-500 font-medium">Email</p>
-                              <p className="text-sm text-gray-900 font-medium">{submission.email}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                              <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                              </svg>
-                            </div>
-                            <div>
-                              <p className="text-xs text-gray-500 font-medium">Phone</p>
-                              <p className="text-sm text-gray-900 font-medium">{submission.phone}</p>
-                            </div>
+                          <div>
+                            <p className="text-xs text-gray-500 font-medium">Clinic</p>
+                            <p className="text-sm text-gray-900 font-medium">{submission.clinic_name}</p>
                           </div>
                         </div>
-
-                        {/* Message */}
-                        {submission.message && (
-                          <div className="mb-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                              </svg>
-                              <span className="text-sm font-medium text-gray-700">Message</span>
-                            </div>
-                            <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-blue-500">
-                              <p className="text-sm text-gray-700 leading-relaxed">{submission.message}</p>
-                            </div>
+                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg mb-4">
+                          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                            <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                            </svg>
                           </div>
-                        )}
-
-                        {/* Actions */}
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-gray-100">
+                          <div>
+                            <p className="text-xs text-gray-500 font-medium">Phone</p>
+                            <p className="text-sm text-gray-900 font-medium">{submission.phone}</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
                           <a 
                             href={`/en/fertility-clinic/${submission.clinic_slug}`}
                             target="_blank"
@@ -1285,7 +1254,16 @@ const Admin = () => {
                             <Building2 className="w-4 h-4" />
                             View Clinic Page
                           </a>
-                          
+                          <Button
+                            onClick={() => {
+                              setSelectedConsultation(submission);
+                              setShowConsultationModal(true);
+                            }}
+                            variant="outline"
+                            size="sm"
+                          >
+                            View Details
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -1309,7 +1287,6 @@ const Admin = () => {
                 <div className="space-y-4">
                   {contactSubmissions.map((submission) => (
                     <div key={submission.id} className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
-                      {/* Header */}
                       <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b border-gray-100">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
@@ -1318,74 +1295,49 @@ const Admin = () => {
                             </div>
                             <div>
                               <h3 className="font-bold text-gray-900 text-lg">{submission.first_name} {submission.last_name}</h3>
+                              <p className="text-sm text-gray-600">{submission.email}</p>
                             </div>
                           </div>
                           <div className="text-right">
                             <div className="text-xs text-gray-500 bg-white px-2 py-1 rounded-full border">
                               {new Date(submission.created_at).toLocaleDateString()}
                             </div>
-                            <div className="text-xs text-gray-400 mt-1">
-                              {new Date(submission.created_at).toLocaleTimeString()}
-                            </div>
                           </div>
                         </div>
                       </div>
-
-                      {/* Content */}
                       <div className="p-6">
-                        {/* Contact Info */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                            <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                              <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                              </svg>
-                            </div>
-                            <div>
-                              <p className="text-xs text-gray-500 font-medium">Email</p>
-                              <p className="text-sm text-gray-900 font-medium">{submission.email}</p>
-                            </div>
+                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg mb-4">
+                          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                            <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                            </svg>
                           </div>
-                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                              <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                              </svg>
-                            </div>
-                            <div>
-                              <p className="text-xs text-gray-500 font-medium">Phone</p>
-                              <p className="text-sm text-gray-900 font-medium">{submission.phone}</p>
-                            </div>
+                          <div>
+                            <p className="text-xs text-gray-500 font-medium">Phone</p>
+                            <p className="text-sm text-gray-900 font-medium">{submission.phone}</p>
                           </div>
                         </div>
-
-                        {/* Subject */}
-                        <div className="mb-4">
-                          <div className="flex items-center gap-2 mb-2">
-                            <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg mb-4">
+                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                             </svg>
-                            <span className="text-sm font-medium text-gray-700">Subject</span>
                           </div>
-                          <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
-                            {submission.subject}
-                          </Badge>
-                        </div>
-
-                        {/* Message */}
-                        <div className="mb-4">
-                          <div className="flex items-center gap-2 mb-2">
-                            <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                            </svg>
-                            <span className="text-sm font-medium text-gray-700">Message</span>
-                          </div>
-                          <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-green-500">
-                            <p className="text-sm text-gray-700 leading-relaxed">{submission.message}</p>
+                          <div>
+                            <p className="text-xs text-gray-500 font-medium">Subject</p>
+                            <p className="text-sm text-gray-900 font-medium">{submission.subject}</p>
                           </div>
                         </div>
-
-                        
+                        <Button
+                          onClick={() => {
+                            setSelectedContact(submission);
+                            setShowContactModal(true);
+                          }}
+                          variant="outline"
+                          size="sm"
+                        >
+                          View Details
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -2409,6 +2361,134 @@ const Admin = () => {
                 </Button>
               </div>
             </form>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Consultation Details Modal */}
+      <Dialog open={showConsultationModal} onOpenChange={setShowConsultationModal}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">
+              Consultation Details - {selectedConsultation?.name}
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedConsultation && (
+            <div className="space-y-6">
+              {/* Patient Information */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="font-semibold text-lg mb-3">Patient Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-600">Name</p>
+                    <p className="font-medium">{selectedConsultation.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Email</p>
+                    <p className="font-medium">{selectedConsultation.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Phone</p>
+                    <p className="font-medium">{selectedConsultation.phone}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Submitted</p>
+                    <p className="font-medium">{new Date(selectedConsultation.created_at).toLocaleString()}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Clinic Information */}
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h3 className="font-semibold text-lg mb-3">Clinic Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-600">Clinic Name</p>
+                    <p className="font-medium">{selectedConsultation.clinic_name}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Clinic Slug</p>
+                    <p className="font-medium">{selectedConsultation.clinic_slug}</p>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <a 
+                    href={`/en/fertility-clinic/${selectedConsultation.clinic_slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"
+                  >
+                    <Building2 className="w-4 h-4" />
+                    View Clinic Page
+                  </a>
+                </div>
+              </div>
+
+              {/* Message */}
+              {selectedConsultation.message && (
+                <div>
+                  <h3 className="font-semibold text-lg mb-3">Message</h3>
+                  <div className="bg-white border border-gray-200 rounded-lg p-4">
+                    <p className="text-gray-700 leading-relaxed">{selectedConsultation.message}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Contact Details Modal */}
+      <Dialog open={showContactModal} onOpenChange={setShowContactModal}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">
+              Contact Details - {selectedContact?.first_name} {selectedContact?.last_name}
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedContact && (
+            <div className="space-y-6">
+              {/* Contact Information */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="font-semibold text-lg mb-3">Contact Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-600">Full Name</p>
+                    <p className="font-medium">{selectedContact.first_name} {selectedContact.last_name}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Email</p>
+                    <p className="font-medium">{selectedContact.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Phone</p>
+                    <p className="font-medium">{selectedContact.phone}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Submitted</p>
+                    <p className="font-medium">{new Date(selectedContact.created_at).toLocaleString()}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Subject */}
+              <div className="bg-green-50 rounded-lg p-4">
+                <h3 className="font-semibold text-lg mb-3">Subject</h3>
+                <Badge variant="outline" className="bg-white text-gray-700 border-gray-200 text-base px-3 py-1">
+                  {selectedContact.subject}
+                </Badge>
+              </div>
+
+              {/* Message */}
+              <div>
+                <h3 className="font-semibold text-lg mb-3">Message</h3>
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <p className="text-gray-700 leading-relaxed">{selectedContact.message}</p>
+                </div>
+              </div>
+            </div>
           )}
         </DialogContent>
       </Dialog>
