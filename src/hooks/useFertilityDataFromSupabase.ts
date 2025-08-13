@@ -7,7 +7,7 @@ type FertilityClinic = Database['public']['Tables']['fertility_clinics']['Row'];
 // Transform Supabase data to match the expected interface
 function transformClinicData(clinic: FertilityClinic) {
   return {
-    id: clinic.clinic_id,
+    id: clinic.id.toString(), // Convert numeric ID to string to match interface
     slug: clinic.slug,
     name: clinic.name,
     url: clinic.url,

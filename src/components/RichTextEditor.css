@@ -1,0 +1,116 @@
+.rich-text-editor .ql-container {
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  background: white;
+}
+
+.rich-text-editor .ql-toolbar {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  border-color: #d1d5db;
+  background: #f9fafb;
+}
+
+.rich-text-editor .ql-editor {
+  min-height: 200px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.rich-text-editor .ql-editor h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.rich-text-editor .ql-editor h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+}
+
+.rich-text-editor .ql-editor h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.rich-text-editor .ql-editor p {
+  margin-bottom: 1rem;
+}
+
+.rich-text-editor .ql-editor img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  display: block;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  position: relative;
+}
+
+.rich-text-editor .ql-editor img:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.rich-text-editor .ql-editor img::after {
+  content: "×";
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  opacity: 0.8;
+  transition: all 0.2s ease-in-out;
+}
+
+.rich-text-editor .ql-editor img:hover::after {
+  opacity: 1;
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.rich-text-editor .ql-editor img::after:hover {
+  background: #dc2626;
+  transform: scale(1.15);
+}
+
+.rich-text-editor .ql-editor blockquote {
+  border-left: 4px solid #3b82f6;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.rich-text-editor .ql-editor ul,
+.rich-text-editor .ql-editor ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.rich-text-editor .ql-editor li {
+  margin-bottom: 0.25rem;
+}
+
+.rich-text-editor .ql-editor a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.rich-text-editor .ql-editor a:hover {
+  color: #2563eb;
+} 

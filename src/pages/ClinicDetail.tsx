@@ -14,12 +14,14 @@ import BookConsultationModal from "@/components/BookConsultationModal";
 import { useState } from "react";
 import { FAQSection } from "@/components/FAQSection";
 import { Helmet } from "react-helmet-async";
+import LeaveReviewModal from "@/components/LeaveReviewModal";
 
 export default function ClinicDetail() {
   const { clinicSlug } = useParams<{ clinicSlug: string }>();
   const { data: clinic, isLoading, error } = useClinicBySlug(clinicSlug || '');
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
   
   if (isLoading) {
     return (
@@ -285,7 +287,12 @@ export default function ClinicDetail() {
       {/* Reviews Section */}
       <section className="py-12 bg-card">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-foreground mb-8">Patient Reviews</h2>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold text-foreground">Patient Reviews</h2>
+            <Button onClick={() => setReviewModalOpen(true)} className="bg-primary hover:bg-primary/90">
+              Leave a Review
+            </Button>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
@@ -329,6 +336,15 @@ export default function ClinicDetail() {
       </section>
 
       <BookConsultationModal open={modalOpen} onOpenChange={setModalOpen} clinicSlug={clinic.slug} />
+      
+      <LeaveReviewModal
+        isOpen={reviewModalOpen}
+        onClose={() => setReviewModalOpen(false)}
+        clinicId={clinic.id}
+        clinicSlug={clinic.slug}
+        clinicName={clinic.clinic_name}
+      />
+      
       <FAQSection />
       <Footer />
     </div>

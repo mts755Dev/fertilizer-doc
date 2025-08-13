@@ -15,6 +15,7 @@ import clinic4 from "@/assets/clinic-4.jpg";
 import clinic5 from "@/assets/clinic-5.jpg";
 import { Card, CardContent } from "@/components/ui/card";
 import { Helmet } from "react-helmet-async";
+import FertilityAssessmentQuiz from "@/components/FertilityAssessmentQuiz";
 
 export default function Location() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -79,8 +80,8 @@ export default function Location() {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Best Hair Docs - Compare & Find The Best Hair Transplant Clinic</title>
-        <meta name="description" content="The #1 platform for comparing hair transplant clinics worldwide — explore 500+ clinics and 1,000+ verified reviews." />
+        <title>Find Fertility Clinics - Compare & Find The Best Fertility Treatment Centers</title>
+        <meta name="description" content="The #1 platform for comparing fertility clinics worldwide — explore 500+ clinics and 1,000+ verified reviews for IVF, IUI, and fertility treatments." />
       </Helmet>
       <Navbar />
       
@@ -100,13 +101,13 @@ export default function Location() {
           <div className="text-center mb-8">
             <div className="inline-flex items-center space-x-2 bg-primary/10 rounded-full px-4 py-2 mb-4">
               <MapPin className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary">Clinic Locator</span>
+              <span className="text-sm font-medium text-primary">Fertility Clinic Locator</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Find Hair Transplant Clinics
+              Find Fertility Clinics
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Compare verified clinics worldwide - prices, reviews, and methods
+              Compare verified fertility clinics worldwide - prices, reviews, and treatment methods
             </p>
           </div>
 
@@ -117,7 +118,7 @@ export default function Location() {
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                   <Input
-                    placeholder="Enter city or country (e.g., Istanbul, London, New York)"
+                    placeholder="Enter city or country (e.g., London, New York, Barcelona)"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10 h-12 border-muted"
@@ -128,7 +129,7 @@ export default function Location() {
                   className="h-12 px-8 bg-primary hover:bg-medical-blue-dark"
                 >
                   <Search className="w-4 h-4 mr-2" />
-                  Search Clinics
+                  Search Fertility Clinics
                 </Button>
               </div>
               
@@ -386,6 +387,21 @@ export default function Location() {
               <p className="text-muted-foreground">Loading clinic data...</p>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Fertility Assessment Quiz */}
+      <section className="py-16 bg-gradient-to-r from-blue-50 to-purple-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Find a Top Rated Clinic
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Take our quick assessment to get personalized clinic recommendations based on your fertility needs
+            </p>
+          </div>
+          <FertilityAssessmentQuiz />
         </div>
       </section>
 

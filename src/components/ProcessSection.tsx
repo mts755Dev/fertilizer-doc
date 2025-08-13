@@ -107,8 +107,8 @@ export const ProcessSection = () => {
                       </div>
                       <div className="flex items-center space-x-2 text-sm">
                         <Star className="w-4 h-4 fill-warning-amber text-warning-amber" />
-                        <span className="font-medium">4.7</span>
-                        <span className="text-muted-foreground">(150+ reviews)</span>
+                        <span className="font-medium">Top Rated</span>
+                        <span className="text-muted-foreground">Verified Clinic</span>
                       </div>
                     </div>
                   </CardContent>

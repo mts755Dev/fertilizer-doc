@@ -11,6 +11,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { useFertilityData } from "@/hooks/useFertilityDataFromSupabase";
 import { Helmet } from "react-helmet-async";
 import type { FertilityClinic } from "@/utils/fertilityUtils";
+import FertilityAssessmentQuiz from "@/components/FertilityAssessmentQuiz";
 
 // Import clinic background images
 import clinic1 from "@/assets/clinic-1.jpg";
@@ -242,7 +243,7 @@ export default function FertilityClinics() {
     const searchLower = searchTerm.toLowerCase();
 
     // Check clinic name and ID
-    if (clinic.name.toLowerCase().includes(searchLower) || clinic.id.includes(searchTerm)) {
+    if (clinic.name.toLowerCase().includes(searchLower) || clinic.id.toString().includes(searchTerm)) {
       return true;
     }
 
@@ -408,9 +409,25 @@ export default function FertilityClinics() {
         <meta name="description" content="Find and compare verified fertility clinics across the United States. Compare success rates, reviews, and treatment options to make informed decisions about your fertility care." />
       </Helmet>
 
-      {/* Hero Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
+            {/* Hero Section with Full-Width Background */}
+      <section className="bg-gradient-to-br from-blue-50 to-blue-100 py-16">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          {/* Fertility Assessment Quiz - Prominent Display */}
+          {!stateName && (
+            <div className="mb-8">
+              {/* Quiz Header */}
+              <div className="text-center mb-6">
+                <h2 className="text-3xl font-bold text-gray-900 mb-3">
+                  Find a Top Rated Clinic
+                </h2>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                  Take our quick assessment to get personalized clinic recommendations based on your fertility needs
+                </p>
+              </div>
+              <FertilityAssessmentQuiz />
+            </div>
+          )}
+          
           {/* Purple Button */}
           <div className="inline-flex items-center space-x-2 bg-purple-100 border-2 border-purple-300 text-purple-700 px-6 py-3 rounded-lg text-sm font-medium mb-6">
             <Camera className="w-4 h-4" />
@@ -567,8 +584,8 @@ export default function FertilityClinics() {
                             {/* Rating */}
                             <div className="flex items-center space-x-2 mb-4">
                               <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                              <span className="font-semibold">4.8</span>
-                              <span className="text-gray-600">Reviews 150+</span>
+                              <span className="font-semibold">Top Rated</span>
+                              <span className="text-gray-600">Verified Clinic</span>
                             </div>
 
                             {/* Clinic Info Grid */}
