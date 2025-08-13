@@ -1,8 +1,9 @@
 import { Navbar } from "@/components/Navbar";
-import { HeroSection } from "@/components/HeroSection";
-import { ReviewsSection } from "@/components/ReviewsSection";
-import { ProcessSection } from "@/components/ProcessSection";
-import { FAQSection } from "@/components/FAQSection";
+import { NewHeroSection } from "@/components/NewHeroSection";
+import { InsuranceSection } from "@/components/InsuranceSection";
+import { HowItWorksSection } from "@/components/HowItWorksSection";
+import { CitiesSection } from "@/components/CitiesSection";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { Footer } from "@/components/Footer";
 import { Helmet } from "react-helmet-async";
 
@@ -26,10 +27,11 @@ const Index = () => {
         <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
       </Helmet>
       <Navbar />
-      <HeroSection />
-      <ReviewsSection />
-      <ProcessSection />
-      <FAQSection />
+      <NewHeroSection />
+      <InsuranceSection />
+      <HowItWorksSection />
+      <CitiesSection />
+      <TestimonialsSection />
       <Footer />
     </div>
   );
